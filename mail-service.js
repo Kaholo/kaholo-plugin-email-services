@@ -6,7 +6,7 @@ const NEW_LINE_WITH_OPTIONAL_COMMA_REGEX = /(?:,\s*)?\n/g;
 const COMMA_WITH_WHITESPACE_REGEX = /\s*,\s*/g;
 
 function sendWithTransport(transporter, {
-  attachmentPath,
+  attachmentPaths,
   ...mailOptions
 }) {
   const correctedMailOptions = { ...mailOptions };
@@ -20,13 +20,11 @@ function sendWithTransport(transporter, {
     }
   });
 
-  if (attachmentPath) {
-    correctedMailOptions.attachments = [
-      {
-        filename: path.basename(attachmentPath),
-        path: attachmentPath,
-      },
-    ];
+  if (attachmentPaths.length) {
+    correctedMailOptions.attachments = attachmentPaths.map((attachmentPath) => ({
+      filename: path.basename(attachmentPath),
+      path: attachmentPath,
+    }));
   }
 
   return transporter.sendMail(correctedMailOptions);

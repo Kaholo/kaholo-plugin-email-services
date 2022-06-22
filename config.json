@@ -285,11 +285,12 @@
           "required": false
         },
         {
-          "name": "attachmentPath",
-          "viewName": "Attachment Path",
-          "type": "string",
-          "description": "Path to file on Kaholo agent to attach to email",
-          "placeholder": "/home/testpipeline-001/results.zip",
+          "name": "attachmentPaths",
+          "viewName": "Attachment Paths",
+          "type": "text",
+          "description": "Paths to files on Kaholo agent to attach to email (one path per line)",
+          "placeholder": "/home/testpipeline-001/results.zip\n/home/testpipeline-002/results.zip",
+          "parserType": "array",
           "required": false
         }
       ]
