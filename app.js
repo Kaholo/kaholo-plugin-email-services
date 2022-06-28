@@ -1,36 +1,32 @@
 const kaholoPluginLibrary = require("@kaholo/plugin-library");
-const nodemailerSendgrid = require("nodemailer-sendgrid");
-const nodemailer = require("nodemailer");
-const { sendWithTransport } = require("./mail-service");
+const MailService = require("./mail-service");
 
 function send({
   service,
   username,
   password,
   apiKey,
-  ...mailingDetails
+  to,
+  from,
+  subject,
+  cc,
+  bcc,
+  text,
+  html,
+  attachmentPaths,
 }) {
-  let transportCreationOptions;
+  const mailService = new MailService(service, username, password, apiKey);
 
-  if (service === "SendGrid") {
-    transportCreationOptions = nodemailerSendgrid({
-      apiKey,
-    });
-  } else {
-    transportCreationOptions = { service };
-
-    if (apiKey) {
-      transportCreationOptions.auth = { api_key: apiKey };
-    } else {
-      transportCreationOptions.auth = {
-        user: username,
-        pass: password,
-      };
-    }
-  }
-
-  const transport = nodemailer.createTransport(transportCreationOptions);
-  return sendWithTransport(transport, mailingDetails);
+  return mailService.send({
+    to,
+    from,
+    subject,
+    cc,
+    bcc,
+    text,
+    html,
+    attachmentPaths,
+  });
 }
 
 module.exports = kaholoPluginLibrary.bootstrap({

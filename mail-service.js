@@ -1,35 +1,74 @@
+const nodemailerSendgrid = require("nodemailer-sendgrid");
+const nodemailer = require("nodemailer");
 const path = require("path");
-
-const FIELDS_WITH_MULTILINE_SUPPORT = ["bcc", "to", "cc"];
 
 const NEW_LINE_WITH_OPTIONAL_COMMA_REGEX = /(?:,\s*)?\n/g;
 const COMMA_WITH_WHITESPACE_REGEX = /\s*,\s*/g;
 
-function sendWithTransport(transporter, {
-  attachmentPaths,
-  ...mailOptions
-}) {
-  const correctedMailOptions = { ...mailOptions };
+class MailService {
+  static FIELDS_WITH_MULTILINE_SUPPORT = ["bcc", "to", "cc"];
 
-  FIELDS_WITH_MULTILINE_SUPPORT.forEach((field) => {
-    if (correctedMailOptions[field]) {
-      correctedMailOptions[field] = correctedMailOptions[field]
-        .trim()
-        .replace(NEW_LINE_WITH_OPTIONAL_COMMA_REGEX, ", ")
-        .replace(COMMA_WITH_WHITESPACE_REGEX, ", ");
+  constructor(service, username, password, apiKey) {
+    let transportCreationOptions;
+
+    if (service === "SendGrid") {
+      transportCreationOptions = nodemailerSendgrid({
+        apiKey,
+      });
+    } else {
+      transportCreationOptions = { service };
+
+      if (apiKey) {
+        transportCreationOptions.auth = { api_key: apiKey };
+      } else {
+        transportCreationOptions.auth = {
+          user: username,
+          pass: password,
+        };
+      }
     }
-  });
 
-  if (attachmentPaths.length) {
-    correctedMailOptions.attachments = attachmentPaths.map((attachmentPath) => ({
-      filename: path.basename(attachmentPath),
-      path: attachmentPath,
-    }));
+    this.transport = nodemailer.createTransport(transportCreationOptions);
   }
 
-  return transporter.sendMail(correctedMailOptions);
+  send({
+    to,
+    from,
+    subject,
+    cc,
+    bcc,
+    text,
+    html,
+    attachmentPaths,
+  }) {
+    const correctedMailOptions = {
+      to,
+      from,
+      subject,
+      cc,
+      bcc,
+      text,
+      html,
+    };
+
+    MailService.FIELDS_WITH_MULTILINE_SUPPORT.forEach((field) => {
+      if (correctedMailOptions[field]) {
+        correctedMailOptions[field] = correctedMailOptions[field]
+          .trim()
+          .replace(NEW_LINE_WITH_OPTIONAL_COMMA_REGEX, ", ")
+          .replace(COMMA_WITH_WHITESPACE_REGEX, ", ");
+      }
+    });
+
+    if (attachmentPaths.length) {
+      correctedMailOptions.attachments = attachmentPaths.map((attachmentPath) => ({
+        filename: path.basename(attachmentPath),
+        path: attachmentPath,
+      }));
+    }
+
+    return this.transport.sendMail(correctedMailOptions);
+  }
 }
 
-module.exports = {
-  sendWithTransport,
-};
+module.exports = MailService;
