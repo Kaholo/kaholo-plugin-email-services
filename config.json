@@ -1,0 +1,299 @@
+{
+  "name": "email-services",
+  "viewName": "Email Services",
+  "type": "executer",
+  "execProgram": "node",
+  "main": "app.js",
+  "version": "1.0.0",
+  "imgUrl": "logo.png",
+  "keywords": [
+    "email",
+    "mail",
+    "service",
+    "smtp",
+    "message",
+    "notifications"
+  ],
+  "category": "NOTIFICATIONS",
+  "auth": {
+    "authId": "emailServicesAccount",
+    "params": [
+      {
+        "name": "service",
+        "viewName": "Service",
+        "type": "options",
+        "options": [
+          {
+            "id": "126",
+            "name": "126"
+          },
+          {
+            "id": "163",
+            "name": "163"
+          },
+          {
+            "id": "1und1",
+            "name": "1und1"
+          },
+          {
+            "id": "AOL",
+            "name": "AOL"
+          },
+          {
+            "id": "DebugMail",
+            "name": "DebugMail"
+          },
+          {
+            "id": "DynectEmail",
+            "name": "DynectEmail"
+          },
+          {
+            "id": "FastMail",
+            "name": "FastMail"
+          },
+          {
+            "id": "GandiMail",
+            "name": "GandiMail"
+          },
+          {
+            "id": "Gmail",
+            "name": "Gmail"
+          },
+          {
+            "id": "Godaddy",
+            "name": "Godaddy"
+          },
+          {
+            "id": "GodaddyAsia",
+            "name": "GodaddyAsia"
+          },
+          {
+            "id": "GodaddyEurope",
+            "name": "GodaddyEurope"
+          },
+          {
+            "id": "hot.ee",
+            "name": "hot.ee"
+          },
+          {
+            "id": "Hotmail",
+            "name": "Hotmail"
+          },
+          {
+            "id": "iCloud",
+            "name": "iCloud"
+          },
+          {
+            "id": "mail.ee",
+            "name": "mail.ee"
+          },
+          {
+            "id": "Mail.ru",
+            "name": "Mail.ru"
+          },
+          {
+            "id": "Maildev",
+            "name": "Maildev"
+          },
+          {
+            "id": "Mailgun",
+            "name": "Mailgun"
+          },
+          {
+            "id": "Mailjet",
+            "name": "Mailjet"
+          },
+          {
+            "id": "Mailosaur",
+            "name": "Mailosaur"
+          },
+          {
+            "id": "Mandrill",
+            "name": "Mandrill"
+          },
+          {
+            "id": "Naver",
+            "name": "Naver"
+          },
+          {
+            "id": "OpenMailBox",
+            "name": "OpenMailBox"
+          },
+          {
+            "id": "Outlook365",
+            "name": "Outlook365"
+          },
+          {
+            "id": "Postmark",
+            "name": "Postmark"
+          },
+          {
+            "id": "QQ",
+            "name": "QQ"
+          },
+          {
+            "id": "QQex",
+            "name": "QQex"
+          },
+          {
+            "id": "SendCloud",
+            "name": "SendCloud"
+          },
+          {
+            "id": "SendGrid",
+            "name": "SendGrid"
+          },
+          {
+            "id": "SendinBlue",
+            "name": "SendinBlue"
+          },
+          {
+            "id": "SendPulse",
+            "name": "SendPulse"
+          },
+          {
+            "id": "SES",
+            "name": "SES"
+          },
+          {
+            "id": "SES-US-EAST-1",
+            "name": "SES-US-EAST-1"
+          },
+          {
+            "id": "SES-US-WEST-2",
+            "name": "SES-US-WEST-2"
+          },
+          {
+            "id": "SES-EU-WEST-1",
+            "name": "SES-EU-WEST-1"
+          },
+          {
+            "id": "Sparkpost",
+            "name": "Sparkpost"
+          },
+          {
+            "id": "Yahoo",
+            "name": "Yahoo"
+          },
+          {
+            "id": "Yandex",
+            "name": "Yandex"
+          },
+          {
+            "id": "Zoho",
+            "name": "Zoho"
+          },
+          {
+            "id": "qiye.aliyun",
+            "name": "qiye.aliyun"
+          }
+        ],
+        "required": true
+      },
+      {
+        "name": "apiKey",
+        "viewName": "API Key",
+        "type": "vault",
+        "description": "An API Key if provided by the selected service",
+        "required": false
+      },
+      {
+        "name": "username",
+        "viewName": "Username",
+        "type": "string",
+        "description": "Username to authenticate with the selected service",
+        "placeholder": "myuser@myservice.com",
+        "required": false
+      },
+      {
+        "name": "password",
+        "viewName": "Password",
+        "type": "vault",
+        "description": "Password to authenticate with the selected service",
+        "required": false
+      }
+    ]
+  },
+  "settings": [
+    {
+      "name": "from",
+      "viewName": "From",
+      "type": "string",
+      "description": "The email address of the sender of the email",
+      "placeholder": "kaholo-notifications@myorg.com"
+    }
+  ],
+  "methods": [
+    {
+      "name": "send",
+      "viewName": "Send Mail",
+      "params": [
+        {
+          "name": "from",
+          "viewName": "From",
+          "type": "string",
+          "description": "The email address of the sender of the email",
+          "placeholder": "kaholo-notifications@myorg.com",
+          "required": true
+        },
+        {
+          "name": "to",
+          "viewName": "To",
+          "type": "text",
+          "description": "One or more email addresses (comma or new line separated) of recipients of the email",
+          "placeholder": "johnny.d@myorg.com, amber.h@myorg.com",
+          "required": true
+        },
+        {
+          "name": "subject",
+          "viewName": "Message Subject",
+          "type": "string",
+          "description": "The subject line of the email message",
+          "placeholder": "Pipeline Success Notification",
+          "required": true
+        },
+        {
+          "name": "cc",
+          "viewName": "CC",
+          "type": "text",
+          "description": "One or more email addresses (comma or new line separated) of CC recipients of the email",
+          "placeholder": "penney.a@myorg.com",
+          "required": false
+        },
+        {
+          "name": "bcc",
+          "viewName": "BCC",
+          "type": "text",
+          "description": "One or more email addresses (comma or new line separated) of BCC recipients of the email",
+          "placeholder": "ray.c@myorg.com",
+          "required": false
+        },
+        {
+          "name": "text",
+          "viewName": "Plain Text Message",
+          "type": "string",
+          "description": "Plaintext version of email",
+          "placeholder": "Your Pipeline has completed successfully!",
+          "required": false
+        },
+        {
+          "name": "html",
+          "viewName": "HTML Message",
+          "type": "string",
+          "description": "HTML version of email",
+          "placeholder": "<b><em>Your Pipeline has completed sucessfully!</em></b><img src=\"https://upload.wikimedia.org/wikipedia/commons/6/64/Champagne_uncorking_photographed_with_a_high_speed_air-gap_flash.jpg\" alt=\"champagne image\">",
+          "required": false
+        },
+        {
+          "name": "attachmentPaths",
+          "viewName": "Attachment Paths",
+          "type": "text",
+          "description": "Paths to files on Kaholo agent to attach to email (one path per line)",
+          "placeholder": "/home/testpipeline-001/results.zip\n/home/testpipeline-002/results.zip",
+          "parserType": "array",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
