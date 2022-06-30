@@ -60,7 +60,7 @@ class MailService {
       }
     });
 
-    if (attachmentPaths.length) {
+    if (attachmentPaths?.length) {
       correctedMailOptions.attachments = attachmentPaths.map((attachmentPath) => ({
         filename: path.basename(attachmentPath),
         path: attachmentPath,
