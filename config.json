@@ -12,9 +12,10 @@
     "service",
     "smtp",
     "message",
-    "notifications"
+    "notifications",
+    "send"
   ],
-  "category": "NOTIFICATIONS",
+  "category": "Notifications",
   "auth": {
     "authId": "emailServicesAccount",
     "params": [
@@ -265,7 +266,7 @@
           "viewName": "BCC",
           "type": "text",
           "description": "One or more email addresses (comma or new line separated) of BCC recipients of the email",
-          "placeholder": "ray.c@myorg.com",
+          "placeholder": "raymond.c@myorg.com",
           "required": false
         },
         {
@@ -289,7 +290,7 @@
           "viewName": "Attachment Paths",
           "type": "text",
           "description": "Paths to files on Kaholo agent to attach to email (one path per line)",
-          "placeholder": "/home/testpipeline-001/results.zip\n/home/testpipeline-002/results.zip",
+          "placeholder": "tests/test001-results.zip\n/usr/src/app/workspace/tests/test002-results.zip",
           "parserType": "array",
           "required": false
         }
