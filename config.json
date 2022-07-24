@@ -218,7 +218,7 @@
   "settings": [
     {
       "name": "from",
-      "viewName": "From",
+      "viewName": "Default From",
       "type": "string",
       "description": "The email address of the sender of the email",
       "placeholder": "kaholo-notifications@myorg.com"
