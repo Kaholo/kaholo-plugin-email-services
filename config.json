@@ -6,15 +6,17 @@
   "main": "app.js",
   "version": "1.0.0",
   "imgUrl": "logo.png",
+  "description": "Sends email via various SMTP services",
   "keywords": [
     "email",
     "mail",
     "service",
     "smtp",
     "message",
-    "notifications"
+    "notifications",
+    "send"
   ],
-  "category": "NOTIFICATIONS",
+  "category": "Notifications",
   "auth": {
     "authId": "emailServicesAccount",
     "params": [
@@ -217,7 +219,7 @@
   "settings": [
     {
       "name": "from",
-      "viewName": "From",
+      "viewName": "Default From",
       "type": "string",
       "description": "The email address of the sender of the email",
       "placeholder": "kaholo-notifications@myorg.com"
@@ -265,14 +267,14 @@
           "viewName": "BCC",
           "type": "text",
           "description": "One or more email addresses (comma or new line separated) of BCC recipients of the email",
-          "placeholder": "ray.c@myorg.com",
+          "placeholder": "raymond.c@myorg.com",
           "required": false
         },
         {
           "name": "text",
           "viewName": "Plain Text Message",
           "type": "string",
-          "description": "Plaintext version of email",
+          "description": "Plain text version of email message body",
           "placeholder": "Your Pipeline has completed successfully!",
           "required": false
         },
@@ -280,7 +282,7 @@
           "name": "html",
           "viewName": "HTML Message",
           "type": "string",
-          "description": "HTML version of email",
+          "description": "HTML version of email message body",
           "placeholder": "<b><em>Your Pipeline has completed sucessfully!</em></b><img src=\"https://upload.wikimedia.org/wikipedia/commons/6/64/Champagne_uncorking_photographed_with_a_high_speed_air-gap_flash.jpg\" alt=\"champagne image\">",
           "required": false
         },
@@ -289,7 +291,7 @@
           "viewName": "Attachment Paths",
           "type": "text",
           "description": "Paths to files on Kaholo agent to attach to email (one path per line)",
-          "placeholder": "/home/testpipeline-001/results.zip\n/home/testpipeline-002/results.zip",
+          "placeholder": "tests/test001-results.zip\n/usr/src/app/workspace/tests/test002-results.zip",
           "parserType": "array",
           "required": false
         }
