@@ -1,85 +1,53 @@
-# Kaholo SystemXYZ Plugin
-This plugin integrates ACME, inc. SystemXYZ with Kaholo, providing access to SystemXYZ's alerting functionality, for example sending a Ex message or setting an Zed alarm to notify someone of the results of a Kaholo Pipeline Action. For triggering Kaholo Pipelines from SystemXYZ, please see the Kaholo [SystemXYZ trigger](https://github.com/Kaholo/kaholo-trigger-systemxyz) instead.
+# Kaholo Email Services Plugin
+This plugin enables Kaholo to send email messages to various email services using the de facto standard Simple Mail Transport Protocol (SMTP). It comes pre-configured with appropriate parameters for various well-known email services such as Gmail, SendGrid, and SendInBlue, as a convenience.
+
+There is also a generic Kaholo SMTP plugin, configurable for any SMTP server. If you use an email service not listed in the drop-down of services in the Email Services plugin, consider using the Kaholo SMTP plugin instead. 
 
 ## Prerequisites
-This plugin works with SystemXYZ version 4.0 and later, both SaaS platform and locally hosted versions.
-
-The following SystemXYZ APIs must be enabled for 3rd party access in the SystemXYZ Platform. The Kaholo plugin's service ID string is "kaholo-plugin-da2de162". SystemXYZ does not support 3rd party access to the Wy API so there are no Wy controller methods in the plugin.
-
->**SystemXYZ Ex API**
->
->**SystemXYZ Zed API**
-
-The SystemXYZ connectivity package must be installed on Kaholo agents. A `Test API` method is provided in the plugin. Check Parameter "Install API" in order to automatically install the SystemXYZ connectivity package. Alternatively, ask your Kaholo administrator to follow the [installation instructions](https://www.systemxyz.com.nz/install_connectivity_package/v4) on the SystemXYZ webite.
+To use this plugin, there must be network access to an email service listed in the drop-down of services in the plugin's Kaholo Account. You will also need credentials with sufficient privileges to send mail via that email service. Email sending privileges are often restricted in terms of allowed `To:` and `From:` addresses, as well as the number and size of emails that may be sent. Please refer to the service documentation or administrator to understand what restrictions may apply to your email service.
 
 ## Access and Authentication
-The plugin accesses SystemXYZ using the same URL as the web console, e.g. https://your-account.systemxyz.com.nz/. However, authentication with user/password is not permitted for automated processes.
+This plugin uses a Kaholo Account to manage four parameters related to access and authentication.
 
-Instead the plugin uses SystemXYZ service tokens to authenticate. A SystemXYZ service token is a string that begins `XYZ-`, for example `XYZ-9ef6df656f9db28d4feaac0c0c6855bc`.  To get an appropriate service token, ask your SystemXYZ administrator for one that has permissions for the following actions:
-* ex-send
-* ex-send-email (only if email feature is used)
-* zed-readgroups
-* zed-triggergroups
-* xyz-vieworg
-* xyz-viewalarms
-
-You will also what to specify which Zed groups you will access, or alternately if the service token is granted `zed-any`, the plugin will be able to read and trigger all SystemXYZ groups.
-
-You may have more than one service token, these are vaulted in the Kaholo Vault. The service token is needed for Parameter "XYZ Service Token" as described below.
+* Service - which of the listed services you intend to use
+* API Key - an API Key if your email service provided uses one, stored in the Kaholo vault so it does not appear in user interfaces, activity log, or error message
+* Username - a username, often in the form of an email address, of the user or service account that is authorized to send mail via this email service
+* Password - the password that goes with Username, stored in the Kaholo vault so it does not appear in user interfaces, activity log, or error message
 
 ## Plugin Installation
 For download, installation, upgrade, downgrade and troubleshooting of plugins in general, see [INSTALL.md](./INSTALL.md).
 
 ## Plugin Settings
-Plugin settings act as default parameter values. If configured in plugin settings, the action parameters may be left unconfigured. Action parameters configured anyway over-ride the plugin-level settings for that Action.
-* Default XYZ Endpoint - The URL of your SystemXYZ installation, e.g. `https://your-account.systemxyz.com.nz/`
-* Default Zed Alarm Group - The Zed Alarm Group to use with Zed alarm methods, e.g. `zed-group-one`. Not used for Ex message-related methods.
-* Default Service Token (Vault) - The service token, stored in the Kaholo vault for authentication and access. e.g. `XYZ-9ef6df656f9db28d4feaac0c0c6855bc`
+Plugin settings act as default parameter values. If configured in plugin settings, the action parameters may be left unconfigured. Action parameters configured anyway over-ride the plugin-level settings for that Action. The email services plugin has only one setting.
+* Default From Address - the email address that will appear in the `From:` portion of the email message, e.g. `pipeline-notifications@kaholo.io`
 
-## Pipelining Alarm Messaging
-A common use case for this plugin is to prototype Wy controller notifications by catching Zed Hooks, applying logic, and sending Ex messages as appropriate. To do this the following steps are needed:
-1. Install and configure the Kaholo [SystemXYZ trigger](https://github.com/Kaholo/kaholo-trigger-systemxyz) to be activated by a [SystemXYZ Zed Hook](https://www.systemxyz.com.nz/zed_hooks/v4).
-1. Use the trigger to start your prototype Kaholo pipeline.
-1. Use method Read Zed Alarms to collect the active alarm list and details.
-1. Apply your logic using the Kaholo Code page and/or Kaholo Conditional Code.
-1. Use method Send Ex Message if your logic determines it appropriate.
+## Method: Send Mail
+This is the only method of this plugin, and unsurprisingly it sends an email message using an email service.
 
-## Method: Test API
-This method does a trivial test of the SystemXYZ connectivity package installed on the Kaholo agent, in order to validate that it is installed correctly and can network connect to the XYZ Endpoint. It returns only the version number of the SystemXYZ system and does not require a service token.
+### Parameter From
+This is the `From:` address of the email message. Only one address may be given. An email service may restrict allowed values. If in doubt, try using the same email address as Username in the Kaholo Account.
 
-### Parameters
-Required parameters have an asterisk (*) next to their names.
-* XYZ Endpoint * - as described above in [plugin settings](#plugin-settings)
-* Install API (checkbox) - if checked and the connectivity package is not found on the agent, the plugin will attempt to automatically install it.
+### Parameter To
+This is the `To:` address(es) of the email message. Any number of addresses may be given, either comma separated or one per line. An email service may restrict allowed values. If in doubt try using the same email address as Username in the Kaholo Account.
 
-## Method: Send Ex Message
-This method composes an Ex Message to send to SystemXYZ users and/or groups. Message bodies may be in JSON, MD, HTML, or plain text format. Malformed JSON, MD, or HTML results in a plain text message. Combinations of users and groups are permitted. Users listed who are also group members or member in more than one group get the message only once.
+### Parameter Message Subject
+This is the plain text `Subject:` line of the message.
 
-> NOTE: Parameters left unconfigured get "Kaholo" by default, including message body and title. If parameter `Email` is selected, parameter `From` must be a valid user name or it will be rejected by SystemXYZ with `HTTP 404 - Page not found`. This also requires the service token have the special permission `ex-send-email`, otherwise you get the same HTTP 404 error.
+### Parameter CC
+This is the optional `CC:` address(es) of the email message. CC is for parties who may be interested in the message but are not the intended direct recipients. Any number of addresses may be given, either comma separated or one per line.
 
-### Parameters
-Required parameters have an asterisk (*) next to their names.
-* XYZ Endpoint * - as described above in [plugin settings](#plugin-settings)
-* Service Token * - as described above in [plugin settings](#plugin-settings)
-* Message Title - plain text one-line title of the message
-* Message Body - the body of the message in JSON, MD, HTML, or plain text format
-* Recipients * - the list of recipients, either usernames or group names, one per line
-* From - indicates the source of the message, either a valid user name or arbitrary text string
-* Email - if checked and SystemXYZ is linked to an email system, the message is sent out as an email instead of a SystemXYZ Ex message.
+### Parameter BCC
+This is the optional `BCC:` address(es) of the email message. BCC is for parties who may be interested in the message but are not the intended direct recipients. BCC is also hidden from other recipients of the message. This is useful for test purposes - you might BCC yourself messages to confirm that the pipeline is working properly. Any number of addresses may be given, either comma separated or one per line.
 
-## Method: Read Zed Alarms
-This method reads a Zed Alarm group from SystemXYZ whether or not any of the alarms are active. It is commonly used with the Kaholo [SystemXYZ trigger](https://github.com/Kaholo/kaholo-trigger-systemxyz) and [SystemXYZ Zed Hooks](https://www.systemxyz.com.nz/zed_hooks/v4). The trigger provides the timely response to an alarm, while this method provides the details of the alarm.
+### Parameter Plain Text Message
+An email message my have Plain Text or HTML content or both. Most modern email clients will display only the HTML portion if it exists, otherwise the plain text. This parameter is for the plain text portion of the message, if any.
 
-If parameter `Zed Hook Code` is configured, the details on the triggering alarm are provided. If parameter `Alarm Group` is provided the details on all alarms (active or not) are provided. If both are configured, details on both are provided, even if the code refers to an alarm not in that group. This is useful in overcoming cross-group limitations in SystemXYZ alarms.
+### Parameter HTML Message
+An email message my have Plain Text or HTML content or both. Most modern email clients will display only the HTML portion if it exists, otherwise the plain text. This parameter is for the HTML portion of the message, if any.
 
-The Final Result in Kaholo is a JSON document of the same format as the equivalent [SystemXYZ Alarm Export](https://www.systemxyz.com.nz/alarm_export/v4).
+### Parameter Attachment Paths
+To attach files to the email, provide path(s) to the file here. These will be either absolute or relative paths on the Kaholo agent. The working directory on a Kaholo agent is `/usr/src/app/workspace` so relative paths are relative to this location.
 
-### Parameters
-Required parameters have an asterisk (*) next to their names.
-* XYZ Endpoint * - as described above in [plugin settings](#plugin-settings)
-* Service Token * - as described above in [plugin settings](#plugin-settings)
-* Zed Hook Code - a code string from Zed Hooks, e.g. `zed-20220329aad`
-* Zed Alarm Group - a Zed alarm group, e.g. `zed-group-one`
+For example, if you have built a jar file that is located at `/usr/src/app/workspace/myproj/target/artifact-1.0.25115.jar`, you could put either that full path in this parameter, or the relative path `myproj/target/artifact-1.0.25115.jar`, and either way the file would be attached to the email.
 
-## Method: Set Zed Alarm
-This method is not yet implemented. If you are interested in setting Zed alarms from Kaholo, please let us know! support@kaholo.io.
+Whether or not attachments are allowed and the size/type of those attachments are commonly restricted by the email service provider. For example executable files (even within a zip file) or attachments larger than 100MB are commonly forbidden. If you experience trouble with this please consult the service documentation or administrator.
