@@ -1,4 +1,3 @@
-const nodemailerSendgrid = require("nodemailer-sendgrid");
 const nodemailer = require("nodemailer");
 const path = require("path");
 
@@ -12,9 +11,14 @@ class MailService {
     let transportCreationOptions;
 
     if (service === "SendGrid") {
-      transportCreationOptions = nodemailerSendgrid({
-        apiKey,
-      });
+      transportCreationOptions = {
+        host: "smtp.sendgrid.net",
+        port: 587,
+        auth: {
+          user: "apikey",
+          pass: apiKey,
+        },
+      };
     } else {
       transportCreationOptions = { service };
 
