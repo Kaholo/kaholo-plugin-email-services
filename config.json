@@ -4,7 +4,7 @@
   "type": "executer",
   "execProgram": "node",
   "main": "app.js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "imgUrl": "logo.png",
   "description": "Sends email via various SMTP services",
   "keywords": [
